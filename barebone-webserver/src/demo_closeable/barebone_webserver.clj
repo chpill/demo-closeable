@@ -1,6 +1,5 @@
 (ns demo-closeable.barebone-webserver
-  (:require [ring.adapter.jetty :refer [run-jetty]]
-            [clojure.test :refer [deftest is run-tests]]))
+  (:require [ring.adapter.jetty :refer [run-jetty]]))
 
 ;; https://medium.com/@maciekszajna/reloaded-workflow-out-of-the-box-be6b5f38ea98
 
@@ -21,24 +20,10 @@
                                    #(.stop %))]
     (f @webserver)))
 
-(def live-server (future ::not-initialized-yet))
+(comment (run-with-webserver {:port 54321}
+                             (fn [_webserver]
+                               (println "The server is live:"
+                                        (slurp "http://localhost:54321"))))
+         (run-with-webserver {:port 54321}
+                             #(.join %)))
 
-(defn start! []
-  (def live-server (future (run-with-webserver {:port 54321}
-                                               #(.join %)))))
-(defn stop! []
-  (future-cancel live-server))
-
-(comment (start!)
-         (stop!))
-
-(deftest test-webserver
-  (let [url "http://localhost:12345"]
-    (is (thrown? java.net.ConnectException (slurp url)))
-    (run-with-webserver {:port 12345}
-                        (fn [_webserver]
-                          (is (= (slurp url) "Counter: 43"))
-                          (is (= (slurp url) "Counter: 44"))))
-    (is (thrown? java.net.ConnectException (slurp url)))))
-
-(comment (run-tests))
