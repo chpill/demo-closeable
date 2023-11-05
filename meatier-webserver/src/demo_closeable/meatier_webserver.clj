@@ -12,10 +12,14 @@
      java.io.Closeable (close [_] (close value)))))
 
 (defn run-with-webserver [config f]
-  (with-open [counter (closeable (atom 42))
-              handler (let [h (if (:dev config) handler/make-reloading handler/make)]
-                        (closeable (h @counter)))
-              webserver (closeable (run-jetty @handler {:port (:port config)
-                                                        :join? false})
-                                   #(.stop %))]
+  (with-open
+    [counter (closeable (atom 42))
+     handler (closeable ((if (:dev config) handler/make-reloading handler/make)
+                         @counter))
+     webserver (closeable (run-jetty @handler {:port (:port config)
+                                               :join? false})
+                          #(.stop %))]
     (f @webserver)))
+
+(comment (run-with-webserver {:port 54321 :dev true}
+                             #(.join %)))

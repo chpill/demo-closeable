@@ -1,6 +1,5 @@
 (ns demo-closeable.root-handler
   (:require [demo-closeable.nested :as nested]
-            [reitit.core :as r]
             [reitit.ring :as rr]))
 
 
@@ -18,8 +17,9 @@
 (defn make [counter]
   (rr/ring-handler (rr/router (routes))
                    (rr/create-default-handler
-                    {:not-found (constantly {:status 404
-                                             :body "Real-worldish 404 not found page"})})
+                    {:not-found (constantly
+                                 {:status 404
+                                  :body "Real-worldish 404 page"})})
                    {:middleware [(inject-counter counter)]}))
 
 (defn make-reloading [counter]
