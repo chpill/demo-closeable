@@ -14,7 +14,9 @@
 (defn run-with-webserver [config f]
   (with-open
     [counter (closeable (atom 42))
-     handler (closeable ((if (:dev config) handler/make-reloading handler/make)
+     handler (closeable ((if (:dev config)
+                           handler/make-reloading
+                           handler/make)
                          @counter))
      webserver (closeable (run-jetty @handler {:port (:port config)
                                                :join? false})

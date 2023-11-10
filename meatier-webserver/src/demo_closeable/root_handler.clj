@@ -3,7 +3,7 @@
             [reitit.ring :as rr]))
 
 
-(defn routes []
+(defn complete-routes []
   [""
    ["/nested" (nested/routes)]
    ["/ping" (fn [_req] {:status 200
@@ -15,12 +15,12 @@
       (handler (assoc req :counter counter)))))
 
 (defn make [counter]
-  (rr/ring-handler (rr/router (routes))
+  (rr/ring-handler (rr/router (complete-routes))
                    (rr/create-default-handler
                     {:not-found (constantly
                                  {:status 404
                                   :body "Real-worldish 404 page"})})
                    {:middleware [(inject-counter counter)]}))
 
-(defn make-reloading [counter]
-  (rr/reloading-ring-handler #(make counter)))
+(defn make-reloading [& args]
+  (rr/reloading-ring-handler #(apply make args)))

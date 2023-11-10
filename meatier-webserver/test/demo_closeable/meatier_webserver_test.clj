@@ -1,12 +1,14 @@
 (ns demo-closeable.meatier-webserver-test
   (:require [clojure.test :refer [deftest is run-tests]]
             [demo-closeable.deeply-nested :as dn]
-            [demo-closeable.meatier-webserver :refer [run-with-webserver]]))
+            [demo-closeable.meatier-webserver
+             :refer [run-with-webserver]]))
 
 
 (deftest test-reloading-webserver
   (let [port 12345
-        url (str "http://localhost:" port "/nested/deeply-nested/counter")]
+        url (str "http://localhost:" port
+                 "/nested/deeply-nested/counter")]
     (run-with-webserver
      {:port port :dev true}
      (fn [_webserver]
