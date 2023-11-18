@@ -3,7 +3,8 @@
         org.clojure/clojure {:mvn/version "1.11.1"}
         ring/ring-core {:mvn/version "1.10.0"}
         ring/ring-jetty-adapter {:mvn/version "1.10.0"}}
- :aliases {:dev {:extra-paths ["dev"]}
+ :aliases {:dev {:extra-paths ["dev"]
+                 :extra-deps {com.clojure-goes-fast/clj-java-decompiler {:mvn/version "0.3.4"}}}
            :test {:extra-paths ["test"]
                   :extra-deps {io.github.cognitect-labs/test-runner {:git/tag "v0.5.1" :git/sha "dfb30dd"}}
                   :main-opts ["-m" "cognitect.test-runner"]

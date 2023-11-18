@@ -22,3 +22,22 @@
    ["/closure-issue" captured-fn]
    ["/alternative" {:middleware [smug-middleware]}
     ["" example-fn]]])
+
+(comment
+  (require '[clj-java-decompiler.core :refer [decompile]])
+
+  (->> (defn smug-middleware [handler]
+         (fn inner-function [req]
+           (update (handler req)
+                   :body str " -- Sent from my server. I use Clojure btw.")))
+       decompile
+       with-out-str
+       (spit "/tmp/decompiled-original.java"))
+
+  (->> (defn smug-middleware [handler]
+         (fn inner-function [req]
+           (update (example-fn req)
+                   :body str " -- I like hammocks and private jokes.")))
+       decompile
+       with-out-str
+       (spit "/tmp/decompiled-with-modification.java")))
